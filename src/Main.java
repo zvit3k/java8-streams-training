@@ -16,8 +16,20 @@ public class Main {
 		
 		//MODEL-MILEAGE
 		//cars.getModelAndMileage().forEach(System.out::println);;
+		
+		//STATS
 		//cars.showStatistics();
-		System.out.println(cars.isComponentInAllCars("GPS"));
+		
+		//MAX PRICE USING OPTIONAL
+		//cars.getMaxPrice();
+		
+		//CHECK COMPONENTS
+		cars.isComponentInAllCars("KLIMATYZACJA");
+		
+		
+		//COMPONENTS SORTING
+		//cars.sortedComponents();
+		
 		System.out.println("--DONE--");
 		
 	}

@@ -17,6 +17,7 @@ import java.util.OptionalDouble;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
+import java.util.stream.Stream;
 
 public class CarList {
 	private List<Car> cars;
@@ -188,7 +189,7 @@ public class CarList {
 		}
 	}
 
-	public List<Car> reducedCarsWitMileagehMoreThan(double mileage) {
+	public List<Car> reducedCarsWitMileagehHigherThan(double mileage) {
 		List<Car> reducedCars = this.cars.stream().filter((e) -> e.getMileage() > mileage).collect(Collectors.toList());
 
 		try (BufferedWriter writer = Files.newBufferedWriter(Paths.get("c:/files/output/reducedCarsByMileage.txt"))) {
@@ -205,11 +206,9 @@ public class CarList {
 
 		return reducedCars;
 	}
-	
+
 	public List<String> getModelAndMileage() {
-		List<String> modelAndMileageCars = this.cars
-				.stream()
-				.map((e)->e.getModel()+"-"+e.getMileage())
+		List<String> modelAndMileageCars = this.cars.stream().map((e) -> e.getModel() + "-" + e.getMileage())
 				.collect(Collectors.toList());
 
 		try (BufferedWriter writer = Files.newBufferedWriter(Paths.get("c:/files/output/getModelAndMileage.txt"))) {
@@ -226,61 +225,82 @@ public class CarList {
 
 		return modelAndMileageCars;
 	}
-	
-	public void showStatistics(){
+
+	public void showStatistics() {
 		System.out.println("::Price statitstics:");
-		double avaragePrice = this.cars.stream().collect(Collectors.averagingDouble(e->e.getPrice()));
-		System.out.println(":Avarage: "+avaragePrice);
-		double minPrice = this.cars.stream().collect(Collectors.summarizingDouble(e->e.getPrice())).getMin();
-		System.out.println(":Minimum "+minPrice);
-		double maxPrice = this.cars.stream().collect(Collectors.summarizingDouble(e->e.getPrice())).getMax();
-		System.out.println(":Maximum: "+maxPrice+"\n");
-		
+		double avaragePrice = this.cars.stream().collect(Collectors.averagingDouble(e -> e.getPrice()));
+		System.out.println(":Avarage: " + avaragePrice);
+		double minPrice = this.cars.stream().collect(Collectors.summarizingDouble(e -> e.getPrice())).getMin();
+		System.out.println(":Minimum " + minPrice);
+		double maxPrice = this.cars.stream().collect(Collectors.summarizingDouble(e -> e.getPrice())).getMax();
+		System.out.println(":Maximum: " + maxPrice + "\n");
+
 		System.out.println("::Mileage statitstics:");
-		double avarageMileage = this.cars.stream().collect(Collectors.averagingDouble(e ->e.getMileage()));
-		System.out.println(":Avarage: "+avarageMileage);
-		double minMileage = this.cars.stream().collect(Collectors.summarizingDouble(e->e.getMileage())).getMin();
-		System.out.println(":Minimum: "+minMileage);
-		double maxMileage = this.cars.stream().collect(Collectors.summarizingDouble(e->e.getMileage())).getMax();
-		System.out.println(":Maximum: "+maxMileage+"\n");
-		
+		double avarageMileage = this.cars.stream().collect(Collectors.averagingDouble(e -> e.getMileage()));
+		System.out.println(":Avarage: " + avarageMileage);
+		double minMileage = this.cars.stream().collect(Collectors.summarizingDouble(e -> e.getMileage())).getMin();
+		System.out.println(":Minimum: " + minMileage);
+		double maxMileage = this.cars.stream().collect(Collectors.summarizingDouble(e -> e.getMileage())).getMax();
+		System.out.println(":Maximum: " + maxMileage + "\n");
+
 		System.out.println("::Engine capacity statitstics:");
-		double avarageEngineCapacity = this.cars.stream().collect(Collectors.averagingDouble(e ->e.getEngineCapacity()));
-		System.out.println(":Avarage: "+avarageEngineCapacity);
-		double minEngineCapacity = this.cars.stream().collect(Collectors.summarizingDouble(e->e.getEngineCapacity())).getMin();
-		System.out.println(":Minimum: "+minEngineCapacity);
-		double maxEngineCapacity = this.cars.stream().collect(Collectors.summarizingDouble(e->e.getEngineCapacity())).getMax();
-		System.out.println(":Maximum: "+maxEngineCapacity);
+		double avarageEngineCapacity = this.cars.stream()
+				.collect(Collectors.averagingDouble(e -> e.getEngineCapacity()));
+		System.out.println(":Avarage: " + avarageEngineCapacity);
+		double minEngineCapacity = this.cars.stream().collect(Collectors.summarizingDouble(e -> e.getEngineCapacity()))
+				.getMin();
+		System.out.println(":Minimum: " + minEngineCapacity);
+		double maxEngineCapacity = this.cars.stream().collect(Collectors.summarizingDouble(e -> e.getEngineCapacity()))
+				.getMax();
+		System.out.println(":Maximum: " + maxEngineCapacity);
 	}
-	//DO poprawki
-	public double getMaxPrice(){
-		double maxPrice = this.cars.stream().collect(Collectors.summarizingDouble(e->e.getPrice())).getMax(); 
-		Optional<Double> opt = Optional.of(maxPrice);
+
+	public double getMaxPrice() {
+		Stream<Car> carsList = cars.stream();
 		
-		if(opt.isPresent()){
-			return maxPrice;
+		Optional<Car> max = carsList.max((e1,e2)->Double.compare(e1.getPrice(), e2.getPrice()));
+		
+		if(max.isPresent()){
+			System.out.println(max.get().getModel()+":"+max.get().getPrice());
 		}
-		return 0.0;
+		
+		return max.get().getPrice();
 	}
-	//TRY TO MAKE STREAM
-	public boolean isComponentInAllCars(String component){
-		for(Car c: cars){
-			int count=0;
-			List<String> components = c.getComponents();
-			
-			int index=0;
-			for(String s: components){
-				if(component.equals(components.get(index))){
-					count++;
-				}
+
+	public void isComponentInAllCars(String component) {
+		List<Car> carsWithComponent = cars;
+		for(Car c: carsWithComponent){
+			List <String> temp = c.getComponents()
+					.stream()
+					.filter(e ->e.equalsIgnoreCase(component))
+					.collect(Collectors.toList());
+			c.setComponents(temp);
+		}
+		carsWithComponent.forEach(System.out::println);
+	
+	}
+	
+	public void sortedComponents() {
+		for (Car c : cars) {
+			List<String> sorted = c.getComponents().stream().sorted((c1, c2) -> {
+				return c1.compareTo(c2);
+			}).collect(Collectors.toList());
+			c.setComponents(sorted);
+		}
+		
+		try (BufferedWriter writer = Files.newBufferedWriter(Paths.get("c:/files/output/sortedComponents.txt"))) {
+			int index = 0;
+			for (Car c : cars) {
+				String car = cars.get(index).toString();
+				writer.write(car + System.lineSeparator());
 				index++;
 			}
-			if(count!=1){
-				return false;
-			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
-		return true;
+
 	}
 
 }
