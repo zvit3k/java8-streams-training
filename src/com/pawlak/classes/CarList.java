@@ -1,3 +1,5 @@
+package com.pawlak.classes;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -95,7 +97,7 @@ public class CarList {
 		return "Car list " + cars;
 	}
 
-	public void sortByModel() {
+	public List<Car> sortByModel() {
 		List<Car> sortedCars = this.cars.stream().sorted((e1, e2) -> {
 			return e1.getModel().compareTo(e2.getModel());
 		}).collect(Collectors.toList());
@@ -111,12 +113,11 @@ public class CarList {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return sortedCars;
 	}
 
-	public void sortByPrice() {
+	public List<Car> sortByPrice() {
 
-		// Comparator<Car> priceComp = (e1,e2) -> Double.compare(e1.getPrice(),
-		// e2.getPrice());
 		List<Car> sortedCars = cars.stream().sorted((e1, e2) -> {
 			return Double.compare(e1.getPrice(), e2.getPrice());
 		}).collect(Collectors.toList());
@@ -132,9 +133,10 @@ public class CarList {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return sortedCars;
 	}
 
-	public void sortByEngineCapacity() {
+	public List<Car> sortByEngineCapacity() {
 		List<Car> sortedCars = this.cars.stream().sorted((e1, e2) -> {
 			return Double.compare(e1.getEngineCapacity(), e2.getEngineCapacity());
 		}).collect(Collectors.toList());
@@ -150,9 +152,11 @@ public class CarList {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		return sortedCars;
 	}
 
-	public void sortByMileage() {
+	public List<Car> sortByMileage() {
 		List<Car> sortedCars = this.cars.stream().sorted((e1, e2) -> {
 			return Double.compare(e1.getMileage(), e2.getMileage());
 		}).collect(Collectors.toList());
@@ -168,9 +172,10 @@ public class CarList {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return sortedCars;
 	}
 
-	public void sortByNumberOfComponents() {
+	public List<Car> sortByNumberOfComponents() {
 		List<Car> sortedCars = this.cars.stream().sorted((e1, e2) -> {
 			return Integer.compare(e1.getComponents().size(), e2.getComponents().size());
 		}).collect(Collectors.toList());
@@ -187,6 +192,7 @@ public class CarList {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return sortedCars;
 	}
 
 	public List<Car> reducedCarsWitMileagehHigherThan(double mileage) {
@@ -257,37 +263,35 @@ public class CarList {
 
 	public double getMaxPrice() {
 		Stream<Car> carsList = cars.stream();
-		
-		Optional<Car> max = carsList.max((e1,e2)->Double.compare(e1.getPrice(), e2.getPrice()));
-		
-		if(max.isPresent()){
-			System.out.println(max.get().getModel()+":"+max.get().getPrice());
+
+		Optional<Car> max = carsList.max((e1, e2) -> Double.compare(e1.getPrice(), e2.getPrice()));
+
+		if (max.isPresent()) {
+			System.out.println(max.get().getModel() + ":" + max.get().getPrice());
 		}
-		
+
 		return max.get().getPrice();
 	}
 
 	public void isComponentInAllCars(String component) {
 		List<Car> carsWithComponent = cars;
-		for(Car c: carsWithComponent){
-			List <String> temp = c.getComponents()
-					.stream()
-					.filter(e ->e.equalsIgnoreCase(component))
+		for (Car c : carsWithComponent) {
+			List<String> temp = c.getComponents().stream().filter(e -> e.equalsIgnoreCase(component))
 					.collect(Collectors.toList());
 			c.setComponents(temp);
 		}
 		carsWithComponent.forEach(System.out::println);
-	
+
 	}
-	
-	public void sortedComponents() {
+
+	public List<Car> sortedComponents() {
 		for (Car c : cars) {
 			List<String> sorted = c.getComponents().stream().sorted((c1, c2) -> {
 				return c1.compareTo(c2);
 			}).collect(Collectors.toList());
 			c.setComponents(sorted);
 		}
-		
+
 		try (BufferedWriter writer = Files.newBufferedWriter(Paths.get("c:/files/output/sortedComponents.txt"))) {
 			int index = 0;
 			for (Car c : cars) {
@@ -299,7 +303,7 @@ public class CarList {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		return cars;
 
 	}
 

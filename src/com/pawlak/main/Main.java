@@ -1,9 +1,11 @@
+package com.pawlak.main;
+import com.pawlak.classes.CarList;
 
 public class Main {
 	public static void main(String[] args) {
 		
 		CarList cars = new CarList("c:/files/cars.txt");
-		
+		//METHODS TESTING
 		//SORTING - OK
 		//cars.sortByModel();
 		//cars.sortByPrice();
@@ -24,13 +26,12 @@ public class Main {
 		//cars.getMaxPrice();
 		
 		//CHECK COMPONENTS
-		cars.isComponentInAllCars("KLIMATYZACJA");
+		//cars.isComponentInAllCars("KLIMATYZACJA");
 		
 		
 		//COMPONENTS SORTING
 		//cars.sortedComponents();
-		
-		System.out.println("--DONE--");
+
 		
 	}
 }
